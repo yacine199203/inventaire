@@ -1,50 +1,82 @@
 <html>
     <head>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
 <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
     </head>
     <body>
-        <div class="container">
-            <div class="row px-3">
-                <div class="col-12">
-                    <center>
-                        <h1 onclick="bip()">Ajouter un produit</h1>
-                    </center>
-                </div>
-                <div class="col-12">
-                <div class="m-5">
-                <video class="border border-dark rounded" id="preview" width="100%"></video>
-                </div>
-                </div>
-            </div>
-        </div>
+        <div id="container">
+    <h1>QR Code Scanner</h1>
 
-        <script>
-           function bip() {
-               var bip= new Audio();
-                   bip.src="/song/bip.wav";
-                   bip.play();
-           }
-           navigator.mediaDevices.getUserMedia({video: true}) 
-           let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
-           Instascan.Camera.getCameras().then(function(cameras){
-               if(cameras.length > 0 ){
-                   scanner.start(cameras[0]);
-               } else{
-                   alert('No cameras found');
-               }
+    <a id="btn-scan-qr">
+        <img src="https://uploads.sitepoint.com/wp-content/uploads/2017/07/1499401426qr_icon.svg">
+    <a/>
 
-           }).catch(function(e) {
-               console.error(e);
-           });
+    <canvas hidden="" id="qr-canvas"></canvas>
 
-           scanner.addListener('scan',function(c){
-               bip();
-               setTimeout(() => { document.location.href="http://arredochef.com"; }, 500);
-           });
+    <div id="qr-result" hidden="">
+        <b>Data:</b> <span id="outputData"></span>
+    </div>
+</div>
 
-        </script>
+<script>
+const qrcode = window.qrcode;
+
+const video = document.createElement("video");
+const canvasElement = document.getElementById("qr-canvas");
+const canvas = canvasElement.getContext("2d");
+
+const qrResult = document.getElementById("qr-result");
+const outputData = document.getElementById("outputData");
+const btnScanQR = document.getElementById("btn-scan-qr");
+
+let scanning = false;
+qrcode.callback = (res) => {
+  if (res) {
+    outputData.innerText = res;
+    scanning = false;
+
+    video.srcObject.getTracks().forEach(track => {
+      track.stop();
+    });
+
+    qrResult.hidden = false;
+    btnScanQR.hidden = false;
+    canvasElement.hidden = true;
+  }
+};
+btnScanQR.onclick = () =>
+  navigator.mediaDevices
+    .getUserMedia({ video: { facingMode: "environment" } })
+    .then(function(stream) {
+      scanning = true;
+      qrResult.hidden = true;
+      btnScanQR.hidden = true;
+      canvasElement.hidden = false;
+      video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+      video.srcObject = stream;
+      video.play();
+      tick();
+      scan();
+    });
+};
+function tick() {
+  canvasElement.height = video.videoHeight;
+  canvasElement.width = video.videoWidth;
+  canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+
+  scanning && requestAnimationFrame(tick);
+}
+function scan() {
+  try {
+    qrcode.decode();
+  } catch (e) {
+    setTimeout(scan, 300);
+  }
+}
+</script>
     </body>
 </html>
