@@ -26,7 +26,8 @@
                var bip= new Audio();
                    bip.src="/song/bip.wav";
                    bip.play();
-           } 
+           }
+           navigator.mediaDevices.getUserMedia({video: true}) 
            let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
            Instascan.Camera.getCameras().then(function(cameras){
                if(cameras.length > 0 ){
