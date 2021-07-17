@@ -1,0 +1,64 @@
+{% extends '/base.html.twig' %}
+
+{% block title %} {{ inventaire.libelle|upper }} {{ inventaire.traitePar|upper }} {% endblock %}
+
+{% block body %}
+    <div class = "container-fluid"> 
+        <div class="row justify-content-center my-5">
+            <h1>{{ inventaire.libelle|upper }} {{ inventaire.traitePar|upper }}</h1>
+        </div>
+        <div class="row my-5 justify-content-end">
+            <a href="{{ path('product',{'slug': inventaire.slug,'id': inventaire.id}) }}">
+                <button class="btn btn-primary my-2 float-right" type="button">
+                Ajouter un produit
+                </button>
+            </a>
+        </div>
+    </div>
+    <div class="container-fluid my-5 p-3 border border-dark rounded">
+    <div class="row border-bottom m-2 border-dark">
+      <div class="col-2">
+        <h5>Réf</h5>
+      </div>
+      <div class="col-6">
+        <h5>Produit</h5>
+      </div>
+      <div class="col-2">
+        <h5>Couleur</h5>
+      </div>  
+      <div class="col-1">
+        <h5>Qté</h5>
+      </div>
+      <div class="col-1">
+      </div>
+    </div>   
+       
+      <div class="row border-bottom m-2 border-dark">
+      {% for product in inventaire.products %} 
+        <div class="col-2 align-items-center d-flex">
+            <span>{{product.ref}}</span>
+        </div>
+        <div class="col-6 align-items-center d-flex">
+          <span>{{product.productName}}</span>
+        </div>
+        <div class="col-2 align-items-center d-flex">
+          <span>{{product.color}}</span>
+        </div>
+        <div class="col-1 align-items-center d-flex">
+            <span>{{product.qte}}</span>
+        </div>
+        <div class="col-1">
+          <div class="float-right">
+            
+            <a href="#"
+              onclick="return confirm ('voulez vous vraiment supprimer le produit ? ')">
+                <button class="btn pr-0 btnmdsup delete"><i class="far fa-trash-alt"></i></button>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div> 
+
+  </div>
+{% endblock %}
+

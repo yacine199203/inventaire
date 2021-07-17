@@ -1,0 +1,22 @@
+a {
+    text-decoration: none !important;
+    color: #000 !important;
+}
+
+a:hover {
+    color: #007bff !important;
+}
+
+.btnmdsup {
+    box-shadow: none ! important;
+    outline: none ! important;
+    font-size: 18px ! important;
+}
+
+.btnmdsup:hover {
+    color: #007bff ! important;
+}
+
+.delete:hover {
+    color: red !important;
+}

@@ -1,0 +1,51 @@
+<html>
+    <head>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+<script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row px-3">
+                <div class="col-12">
+                    <center class="my-5">
+                        <h1 onclick="bip()">Ajouter un produit</h1>
+                    </center>
+                </div>
+                <div class="col-12">
+                <div class="m-5">
+                <video class="border border-dark rounded" id="preview" width="100%"></video>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+           function bip() {
+               var bip= new Audio();
+                   bip.src="/song/bip.wav";
+                   bip.play();
+           }
+           navigator.mediaDevices.getUserMedia({video: true}) 
+           let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
+           Instascan.Camera.getCameras().then(function(cameras){
+               if(cameras.length > 0 ){
+                   scanner.start(cameras[cameras.length - 1]);
+               } else{
+                   alert('No cameras found');
+               }
+
+           }).catch(function(e) {
+               console.error(e);
+           });
+
+           scanner.addListener('scan',function(c){
+               bip();
+               var urlcourante = document.location.href;
+               setTimeout(() => { document.location.href=urlcourante+c; }, 500);
+           });
+
+        </script>
+    </body>
+</html>
