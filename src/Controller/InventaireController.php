@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Entity\Inventaire;
+use App\Repository\ProductRepository;
 use App\Repository\InventaireRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,20 +38,54 @@ class InventaireController extends AbstractController
     /**
      * @Route("/inventaire/{slug}/{id}/{ref}/{product}/{color}/{qte}", name="addProduct")
      */
-    public function add($slug,$id,$ref,$product,$color,$qte): Response
+    public function add($slug,$id,$ref,$product,$color,$qte,ProductRepository $productRepo,InventaireRepository $inventaireRepo): Response
     {
-        $addProduct = new Product();
-        $post = $this->getDoctrine()->getRepository(Inventaire::class)->find($id);
-        $addProduct->setInventaire($post);
-        $addProduct->setRef($ref);
-        $addProduct->setProductName($product);
-        $addProduct->setColor($color);
-        $addProduct->setQte($qte);
+        $addProduct= $productRepo->findByRef($ref);
+        $inv= $inventaireRepo->findOneBySlug($slug);
+        $addProductId= $productRepo->findOneByInventaire($inv->getId());
+        $test=false;
+        foreach ($addProduct as $value){
+            if($value->getInventaire()->getId() == $inv->getId()){
+                $test=true;
+                $addProduct= $productRepo->findOneById($value->getId());
+            }
+        }
+     
+        if(($addProduct != null)&&($test)){
+            $quantité=$addProduct->getQte();
+            $quantité += $qte;
+            $addProduct->setQte($quantité);
+            
+        }else
+        {
+            $addProduct = new Product();
+            $post = $this->getDoctrine()->getRepository(Inventaire::class)->find($id);
+            $addProduct->setInventaire($post);
+            $addProduct->setRef($ref);
+            $addProduct->setProductName($product);
+            $addProduct->setColor($color);
+            $addProduct->setQte($qte); 
+        }
+        
 
         $manager=$this->getDoctrine()->getManager();
         $manager->persist($addProduct); 
         $manager->flush();
         
+        return $this->redirectToRoute('inventaire', [
+            'slug' => $slug
+        ]);
+    }
+    /**
+     * @Route("/inventaire/{slug}/supprimer-produit/{id} ", name="removeProduct")
+     * @return Response
+     */
+    public function removeCategory($slug,$id,ProductRepository $productRepo)
+    {   
+        $removeProduct = $productRepo->findOneById($id);
+        $manager=$this->getDoctrine()->getManager();
+        $manager->remove($removeProduct); 
+        $manager->flush();
         return $this->redirectToRoute('inventaire', [
             'slug' => $slug
         ]);

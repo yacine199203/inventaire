@@ -52,7 +52,6 @@ class HomeController extends AbstractController
     }
 
     /**
-     * permet de supprimer une catégorie
      * @Route("/dashbord/supprimer-inventaire/{id} ", name="removeInventaire")
      * @return Response
      */
