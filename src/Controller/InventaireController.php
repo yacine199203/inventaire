@@ -72,9 +72,7 @@ class InventaireController extends AbstractController
         $manager->persist($addProduct); 
         $manager->flush();
         
-        return $this->redirectToRoute('inventaire', [
-            'slug' => $slug
-        ]);
+        return $this->json(['code'=> 200, 'message'=>'ok','data'=>'produit ajouté'],200);
     }
     /**
      * @Route("/inventaire/{slug}/supprimer-produit/{id} ", name="removeProduct")
