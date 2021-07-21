@@ -7,24 +7,40 @@
     integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
     crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="/style.css">
     </head>
     <body>
         <div class="container">
             <div class="row px-3">
                 <div class="col-12">
                     <center class="my-5">
-                        <h1 onclick="bip()">Ajouter un produit</h1>
+                        <h1 class="titre">Ajouter un produit</h1>
                     </center>
                 </div>
                 <div class="col-12">
-                <div class="m-5">
+                <div class="m-5 scan">
                 <video class="border border-dark rounded" id="preview" width="100%"></video>
                 </div>
                 </div>
             </div>
+            <div class="text-center">
+            <a class="retour" href="#" onclick="GoBackWithRefresh();return false;">
+                <button class= " vp btn btn-primary">Voir les produits</button>
+            </div>
         </div>
 
+        
+
         <script>
+        function GoBackWithRefresh(event) {
+            if ('referrer' in document) {
+                window.location = document.referrer;
+                /* OR */
+                //location.replace(document.referrer);
+            } else {
+                window.history.back();
+            }
+        }
            function bip() {
                var bip= new Audio();
                    bip.src="/song/bip.wav";
@@ -45,7 +61,6 @@
 
            scanner.addListener('scan',function(c){
                bip();
-               window.navigator.vibrate(200);
                var urlcourante = document.location.href;
                $.getJSON(urlcourante+c, function (response){
                    console.log(response.data)
@@ -53,7 +68,7 @@
 
                
            });
-
+        
         </script>
     </body>
 </html>

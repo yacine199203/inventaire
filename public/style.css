@@ -20,3 +20,18 @@ a:hover {
 .delete:hover {
     color: red !important;
 }
+
+.titre {
+    font-size: 70px ! important;
+    color: red ! important;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.scan {
+    border: black solid 5px;
+}
+
+.vp {
+    margin: 20px;
+}
