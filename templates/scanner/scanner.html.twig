@@ -63,10 +63,13 @@
                
                var urlcourante = document.location.href;
                $.getJSON(urlcourante+c, function (response){
+                   let result= false;
                    if(response.data == true){
                        bip();
                        console.log(response.data)
-                   }else
+                       result= true;
+                   }
+                   if(result == false)
                    {
                        console.log("erreur")
                    }
