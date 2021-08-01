@@ -62,7 +62,7 @@ class InventaireController extends AbstractController
             $post = $this->getDoctrine()->getRepository(Inventaire::class)->find($id);
             $addProduct->setInventaire($post);
             $addProduct->setRef($ref);
-            $addProduct->setProductName($product);
+            $addProduct->setProductName(ucfirst(mb_strtolower($product, 'UTF-8')));
             $addProduct->setColor($color);
             $addProduct->setQte($qte); 
         }
