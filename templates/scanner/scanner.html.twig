@@ -60,9 +60,9 @@
            });
 
            scanner.addListener('scan',function(c){
-               
+               console.log(c.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
                var urlcourante = document.location.href;
-               $.getJSON(urlcourante+c, function (response){
+               $.getJSON(urlcourante+c.normalize("NFD").replace(/[\u0300-\u036f]/g, ""), function (response){
                    let result= false;
                    if(response.data == true){
                        bip();
