@@ -79,7 +79,7 @@ class Product
 
     public function setProductName(string $productName): self
     {
-        $this->productName = $productName;
+        $this->productName = ucfirst(mb_strtolower($productName, 'UTF-8'));
 
         return $this;
     }
@@ -91,7 +91,7 @@ class Product
 
     public function setColor(string $color): self
     {
-        $this->color = $color;
+        $this->color = ucfirst(mb_strtolower($color, 'UTF-8'));
 
         return $this;
     }
