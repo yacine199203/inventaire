@@ -43,6 +43,37 @@ class Product
      */
     private $qte;
 
+
+
+
+    function enleverCaracteresSpeciaux($text) {
+        $utf8 = array(
+        '/[áàâãªä]/u' => 'a',
+        '/[ÁÀÂÃÄ]/u' => 'A',
+        '/[ÍÌÎÏ]/u' => 'I',
+        '/[íìîï]/u' => 'i',
+        '/[éèêë]/u' => 'e',
+        '/[ÉÈÊË]/u' => 'E',
+        '/[óòôõºö]/u' => 'o',
+        '/[ÓÒÔÕÖ]/u' => 'O',
+        '/[úùûü]/u' => 'u',
+        '/[ÚÙÛÜ]/u' => 'U',
+        '/ç/' => 'c',
+        '/Ç/' => 'C',
+        '/ñ/' => 'n',
+        '/Ñ/' => 'N',
+        '//' => '-', // conversion d'un tiret UTF-8 en un tiret simple
+        '/[]/u' => ' ', // guillemet simple
+        '/[«»]/u' => ' ', // guillemet double
+        '/ /' => ' ', // espace insécable (équiv. à 0x160)
+        );
+        return preg_replace(array_keys($utf8), array_values($utf8), $text);
+        }
+    
+
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,7 +110,7 @@ class Product
 
     public function setProductName(string $productName): self
     {
-        $this->productName = ucfirst(mb_strtolower($productName, 'UTF-8'));
+        $this->productName = enleverCaracteresSpeciaux($productName) ;
 
         return $this;
     }
@@ -91,7 +122,7 @@ class Product
 
     public function setColor(string $color): self
     {
-        $this->color = ucfirst(mb_strtolower($color, 'UTF-8'));
+        $this->color = $color;
 
         return $this;
     }
