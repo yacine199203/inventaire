@@ -50,6 +50,14 @@ class InventaireController extends AbstractController
                 $addProduct= $productRepo->findOneById($value->getId());
             }
         }
+
+        function removeAccents($string)
+{
+      return strtr($string,
+          "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ",
+          "aaaaaaaaaaaaooooooooooooeeeeeeeecciiiiiiiiuuuuuuuuynn"
+          );
+}
      
         if(($addProduct != null)&&($test)){
             $quantité=$addProduct->getQte();
@@ -62,7 +70,7 @@ class InventaireController extends AbstractController
             $post = $this->getDoctrine()->getRepository(Inventaire::class)->find($id);
             $addProduct->setInventaire($post);
             $addProduct->setRef($ref);
-            $addProduct->setProductName(ucfirst(mb_strtolower($product, 'UTF-8')));
+            $addProduct->setProductName(removeAccents($product));
             $addProduct->setColor($color);
             $addProduct->setQte($qte); 
         }
